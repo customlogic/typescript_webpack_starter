@@ -7,7 +7,7 @@ function component() {
   const fred = 10;
   const boy = 'adsf';
 
-  element.innerHTML = _.join([ 'HelloXX!!', 'webpacker' ], ' ');
+  element.innerHTML = _.join([ 'Hello', 'webpacker' ], ' ');
 
   return element;
 }
