@@ -10,4 +10,5 @@ BraceWrapping: {
     BeforeCatch : 'false'
     IndentBraces : 'false'
 }
+SpacesInContainerLiterals: false
 ---
