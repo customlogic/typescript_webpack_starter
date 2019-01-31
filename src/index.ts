@@ -1,15 +1,42 @@
 import './style/style.scss';
 
-import * as _ from 'lodash';
+import * as dat from 'dat.gui';
+import * as PIXI from 'pixi.js';
+const STATS = require('stats.js');
 
-function component() {
-  const element = document.createElement('div');
-  const fred = 10;
-  const boy = 'adsf';
+const settings = {
+  speed: 0.5,
+};
 
-  element.innerHTML = _.join(['Hello', 'webpacker'], ' ');
+// PIXI
+const app = new PIXI.Application(window.innerWidth, window.innerHeight, { transparent: false });
+document.getElementById('pixi').appendChild(app.view);
+PIXI.ticker.shared.add(tick);
 
-  return element;
+const sprite = PIXI.Sprite.fromImage('./assets/images/cat.jpg');
+sprite.anchor.set(0.5, 0.5);
+sprite.position.set(500, 300);
+app.stage.addChild(sprite);
+
+// STATS.JS
+const stats = new STATS();
+document.body.appendChild(stats.dom);
+
+// DAT.GUI
+const gui = new dat.GUI();
+gui.add(settings, 'speed', 0, 1);
+
+window.addEventListener('resize', onResize);
+
+function tick(dt: number) {
+  stats.begin();
+
+  const newRotation = sprite.rotation + settings.speed * 0.01;
+  sprite.rotation = newRotation;
+
+  stats.end();
 }
 
-document.body.appendChild(component());
+function onResize() {
+  app.renderer.resize(window.innerWidth, window.innerHeight);
+}
