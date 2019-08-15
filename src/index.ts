@@ -9,14 +9,28 @@ const settings = {
 };
 
 // PIXI
-const app = new PIXI.Application(window.innerWidth, window.innerHeight, { transparent: false });
+const app = new PIXI.Application(
+  { width: window.innerWidth, height: window.innerHeight, transparent: false });
 document.getElementById('pixi').appendChild(app.view);
-PIXI.ticker.shared.add(tick);
 
-const sprite = PIXI.Sprite.fromImage('./assets/images/cat.jpg');
-sprite.anchor.set(0.5, 0.5);
-sprite.position.set(500, 300);
-app.stage.addChild(sprite);
+app.loader.add('cat', './assets/images/cat.jpg').load((loader: any, resources: any) => {
+  const sprite = new PIXI.Sprite(resources.cat.texture);
+
+  sprite.anchor.set(0.5, 0.5);
+  sprite.position.set(500, 300);
+  app.stage.addChild(sprite);
+
+  app.ticker.add(tick);
+
+  function tick(dt: number) {
+    stats.begin();
+
+    const newRotation = sprite.rotation + settings.speed * 0.01;
+    sprite.rotation = newRotation;
+
+    stats.end();
+  }
+});
 
 // STATS.JS
 const stats = new STATS();
@@ -27,15 +41,6 @@ const gui = new dat.GUI();
 gui.add(settings, 'speed', 0, 1);
 
 window.addEventListener('resize', onResize);
-
-function tick(dt: number) {
-  stats.begin();
-
-  const newRotation = sprite.rotation + settings.speed * 0.01;
-  sprite.rotation = newRotation;
-
-  stats.end();
-}
 
 function onResize() {
   app.renderer.resize(window.innerWidth, window.innerHeight);
